@@ -16,3 +16,9 @@
 1. 這裡必須提醒 javascript 在處理數字運算時，採用的是 i32 的 int 格式，<br/>代表有計算的上限和下限，這個東西是計算機基本概論會提及的問題，<br/>這個問題不是只會發生在 js，而是所有語言的共同問題，[請參閱](https://en.wikipedia.org/wiki/IEEE_754-1985)。
 2. 這裡不想採用 input tag 是希望限制用戶的輸入行為，來降低未預期狀況的錯誤發生，一樣不是必要，<br/>如果想知道更多我熟悉 react form hook 操作的程度，可以參考[我的Medium文章](https://medium.com/@LeeLuciano/react-hook-form-mui-yup-edbb5ca922f5)或是[我的github教學](https://github.com/Luciano0322/react_course_vite/tree/master/react-hook-form)。
 3. 關於浮點數運算如果需要在工作場域使用的話我們通常會用指定的第三方庫來處理，ex: decimal.js, 這邊我是採用10進位的整數相加處理。
+
+## 測試項目
+1. 基本的加減乘除
+2. 浮點數基本運算
+3. 0 和 . 的處理是否符合一般計算機的處理。
+4. 連續運算的正確性

@@ -5,21 +5,21 @@ import calculatorReducer, { CalculatorActionTypes, NumStatus, OperationStatus, R
 // 但還是想說改用reducer的方式會比較好維護，所以資料結構有所更動。
 // 然後命名方式的話有思考關聯性，當然要全部寫在一起我覺得應該也沒太大的問題。
 
-const NumsBtn: FC<{ 
+export const NumsBtn: FC<{ 
   num: NumStatus, 
-  modify: (num: NumStatus) => void 
+  modify: (num: NumStatus) => void,
 }> = ({ num, modify }) => {
   return <button className="bg-white rounded-lg hover:shadow w-full p-4" onClick={() => modify(num)}>{num}</button>;
 }
 
-const OperationBtn: FC<{ 
+export const OperationBtn: FC<{ 
   operStr: OperationStatus, 
-  modify: (operation: OperationStatus) => void 
+  modify: (operation: OperationStatus) => void,
 }> = ({ operStr, modify }) => {
   return <button className="bg-yellow-200 rounded-lg hover:shadow w-full p-4" onClick={() => modify(operStr)}>{operStr}</button>;
 }
 
-const ControlBtn: FC<{ 
+export const ControlBtn: FC<{ 
   ctrlStr: ResultRelates,
   modify: (results: ResultRelates) => void, 
 }> = ({ ctrlStr, modify }) => {
