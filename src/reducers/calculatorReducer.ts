@@ -66,13 +66,52 @@ export const calculatorInit = {
 // 保有修改彈性以符合更極端的需求修改，要思考js本身數值是採 i32 的基礎上做運算，
 // 如果要擴充上限可能會需要擴充計算層面的邏輯
 
+// const calcInt = (state: CalculatorStatus): number => {
+//   switch(state.operation) {
+//     case OperationStatus.plus: return state.result + Number(state.input);
+//     case OperationStatus.minus: return state.result - Number(state.input);
+//     case OperationStatus.multiply: return state.result * Number(state.input);
+//     case OperationStatus.divide: return state.input !== "0" ? state.result / Number(state.input) : 0; // 防止除0的問題
+//     default: return state.result; 
+//   }
+// }
+// 處理浮點數的問題
 const calcInt = (state: CalculatorStatus): number => {
-  console.log('checked calc result', state);
+  const resultStr = state.result.toString();
+  const inputStr = state.input; 
+  // 表小數點位數
+  let resultP = 0;
+  let inputP = 0; 
+  // 計算個別位數
+  resultP = resultStr.split(".")[1]?.length || 0;
+  inputP = inputStr.split(".")[1]?.length || 0;
+  // 將小數轉換成整數
+  let resultNum = parseInt(resultStr.replace(".", ""), 10);
+  let inputNum = parseInt(inputStr.replace(".", ""), 10);
+  // 乘以小數點位數來對齊
+  if (resultP > inputP) {
+    inputNum *= Math.pow(10, (resultP - inputP));
+  } else if (inputP > resultP) {
+    resultNum *= Math.pow(10, (inputP - resultP));
+  }
+
   switch(state.operation) {
-    case OperationStatus.plus: return state.result + Number(state.input);
-    case OperationStatus.minus: return state.result - Number(state.input);
-    case OperationStatus.multiply: return state.result * Number(state.input);
-    case OperationStatus.divide: return state.input !== "0" ? state.result / Number(state.input) : 0; // 防止除0的問題
+    case OperationStatus.plus: {
+      if (inputP === 0 && resultP === 0 ) return state.result + Number(state.input);
+      return (resultNum + inputNum) / Math.pow(10, Math.max(resultP, inputP));
+    }
+    case OperationStatus.minus: {
+      if (inputP === 0 && resultP === 0 ) return state.result - Number(state.input);
+      return (resultNum - inputNum) / Math.pow(10, Math.max(resultP, inputP));
+    }
+    case OperationStatus.multiply: {
+      if (inputP === 0 && resultP === 0 ) return state.result * Number(state.input);
+      return (resultNum * inputNum) / Math.pow(10, (resultP + inputP));
+    }
+    case OperationStatus.divide: {
+      if (inputP === 0 && resultP === 0 ) return state.input !== "0" ? state.result / Number(state.input) : 0;
+      return inputNum !==0 ? resultNum / inputNum : 0;
+    } // 防止除0的問題
     default: return state.result; 
   }
 }
@@ -80,8 +119,8 @@ const calcInt = (state: CalculatorStatus): number => {
 const calculatorReducer = (state: CalculatorStatus, action: CalculatorAction) => {
   switch (action.type) {
     case CalculatorActionTypes.InputChange: {
-      const input = state.input === "0" && action.payload !== NumStatus.dot ? action.payload : state.input + action.payload;
-      return { ...state, input: input.includes(".") && action.payload === NumStatus.dot ? state.input : input };
+      const input = (state.input === "0" && action.payload !== NumStatus.dot) ? action.payload : state.input + action.payload;
+      return { ...state, input: (state.input.includes(".") && action.payload === NumStatus.dot) ? state.input : input };
     }
     case CalculatorActionTypes.OperationPress: {
       // 這裡模擬真實計算機的操作行為而做的判斷
